@@ -101,4 +101,9 @@ export default class Airplane extends Model3D {
 		  return true
 		})
 	  }
+
+	  shootDown(enemy) {
+		if (this.shots.length == 0) return false;
+		return this.shots.find(shot => shot.hit.intersectsSphere(enemy.hit))
+	  }
 }
