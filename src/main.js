@@ -182,16 +182,6 @@ function moveEnemy(enemy) {
   }
 }
 
-function updateJoystick(event) {
-  if (!event.buttons) {
-    jet.joystick.x = event.clientX
-    jet.joystick.y = event.clientY
-  } else {
-    jet.joystick.x = null
-    jet.joystick.y = null
-  }
-}
-
 function moveJet() {
   if (jet
     && jet.joystick.x
@@ -257,7 +247,7 @@ const gameLoop = () => {
   !GAME.GAME_OVER && requestAnimationFrame(gameLoop)
 }
 
-window.addEventListener('mousemove', updateJoystick)
+window.addEventListener('mousemove',e=>jet.updateJoystick(e))
 window.addEventListener('click', shooting);
 window.addEventListener('keydown', event =>{
   GAME.GAME_OVER && showModal()
