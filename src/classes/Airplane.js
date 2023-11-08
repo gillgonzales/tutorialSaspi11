@@ -1,3 +1,4 @@
+import { Color, Mesh, MeshStandardMaterial, Sphere, SphereGeometry, Vector3 } from "three";
 import Model3D from "./Model3D";
 
 export default class Airplane extends Model3D {
@@ -14,6 +15,11 @@ export default class Airplane extends Model3D {
 			this.model.position.y = -.2
 			this.GAME.camera.position.y = -this.model.position.y+.2
 		})
+
+		const sphere_geometry = new SphereGeometry(GAME.HIT_RADIUS / 2, 64, 32);
+		const sphereColor = new MeshStandardMaterial({ color: 0xffff00 });
+		this.sphere = new Mesh(sphere_geometry, sphereColor);
+		this.hitSphere = new Sphere(new Vector3(0, 0, 0), GAME.HIT_RADIUS)
 	}
 
 	updateJoystick(event) {
@@ -49,6 +55,32 @@ export default class Airplane extends Model3D {
 	  
 		  if (Math.abs(this.model.rotation.y) > .5)
 			this.model.rotation.y = .5 * (this.model.rotation.y / Math.abs(this.model.rotation.y))
+		}
+	  }
+
+	 shooting() {
+		if (this.GAME.TOTAL_SHOTS > 0) {
+		  if (this.shots.length > 50)
+			return 0
+			this.GAME.TOTAL_SHOTS--
+		  const shot = {
+			rx: this.model.rotation.z,
+			ry: this.model.rotation.x,
+			model: this.sphere.clone(),
+			hit: this.hitSphere.clone(),
+		  }
+		  shot.hit.radius = this.GAME.HIT_RADIUS / 2
+		  shot.model.material.transparent = true
+		  shot.model.material.opacity = .5
+		  shot.model.material.emissive = new Color(0xffff00)
+		  shot.model.material.roughness = .5
+		  shot.model.material.metalness = 1
+		  shot.model.position.set(...this.model.position)
+		  shot.hit.center.copy(shot.model.position)
+		  this.GAME.scene.add(shot.model)
+		  this.shots.push(shot)
+		} else {
+		  console.warn("ACABOU A MUNIÇÃO!!!")
 		}
 	  }
 }
