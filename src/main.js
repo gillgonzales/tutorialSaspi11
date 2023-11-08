@@ -57,11 +57,6 @@ const explosionlight = new THREE.PointLight(0xff3300, 1, 5);
 
 const enemies = createEnemies()
 
-function shootDown(enemy) {
-  if (jet.shots.length == 0) return false;
-  return jet.shots.find(shot => shot.hit.intersectsSphere(enemy.hit))
-}
-
 function createEnemies() {
   let distance = 100
   let horizontalLimit = 5
@@ -163,7 +158,7 @@ const gameLoop = () => {
   jet.updateShots()
   enemies.forEach((e) =>{ 
     moveEnemy(e)
-    if(!e.dead && shootDown(e)){
+    if(!e.dead && jet.shootDown(e)){
       showEnemyHit(e)
       GAME.SCORE+=10
       console.info('Pontos:',GAME.SCORE)
