@@ -182,32 +182,6 @@ function moveEnemy(enemy) {
   }
 }
 
-function moveJet() {
-  if (jet
-    && jet.joystick.x
-    && jet.joystick.y) {
-
-    let wh = window.innerHeight
-    let ww = window.innerWidth
-
-    jet.model.rotation.x += (jet.joystick.y - wh / 2) / wh / 100
-
-    if (Math.abs(jet.model.position.x) > 1) {
-      jet.model.position.x = jet.model.position.x / Math.abs(jet.model.position.x)
-    } else {
-      jet.model.rotation.z -= (jet.joystick.x - ww / 2) / ww / 10
-    }
-
-    if (Math.abs(jet.model.rotation.z) != 0) {
-      jet.model.position.x += (jet.joystick.x - ww / 2) / ww / 10
-      jet.model.rotation.y = jet.model.rotation.z / 2.5
-    }
-
-    if (Math.abs(jet.model.rotation.y) > .5)
-      jet.model.rotation.y = .5 * (jet.model.rotation.y / Math.abs(jet.model.rotation.y))
-  }
-}
-
 function isFinish() {
   if (GAME.LOST_ENEMIES > 2 * GAME.QTD_ENEMIES || GAME.TOTAL_SHOTS <= 0) {
     console.error('GAMEOVER!!!', GAME.SCORE, GAME.TOTAL_SHOTS, GAME.LOST_ENEMIES)
@@ -232,7 +206,7 @@ function showModal(){
 const gameLoop = () => {
   GAME.skyBox.model.rotation.y += .0001
   GAME.skyBox.model.position.z += .0001
-  moveJet()
+  jet.moveJet()
   updateShots()
   enemies.forEach((e) =>{ 
     moveEnemy(e)
