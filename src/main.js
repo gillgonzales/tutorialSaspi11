@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import SkyBox from './classes/SkyBox'
 import TextureAnimator from './classes/TextureAnimator'
 import Model3D from './classes/Model3D';
+import Airplane from './classes/Airplane';
 
 const GAME = {
 	QTD_ENEMIES:  5,
@@ -28,17 +29,11 @@ GAME.camera = new THREE.PerspectiveCamera(
 GAME.camera.position.set(0, .25, 2)
 
 GAME.skyBox = new SkyBox('bluesky', 200)
-GAME.skyBox.create(GAME.scene);
+await GAME.skyBox.create(GAME.scene);
 
 const modelsPath = 'models/f15c/'
 
-const jetModel = new Model3D(modelsPath,'f15c.mtl','f15c.obj')
-const jet = await jetModel.create(GAME.scene)
-const jetJoystick = { x: null, y: null }
-
-jet.scale.setScalar(.5)
-jet.position.y = -.2
-jet.shots = new Array()
+const jet = new Airplane(modelsPath,'f15c.mtl','f15c.obj',GAME)
 
 GAME.light = new THREE.AmbientLight(0xffffff, 10);
 GAME.scene.add(GAME.light);
@@ -71,8 +66,8 @@ function shooting() {
       return 0
       GAME.TOTAL_SHOTS--
     const shot = {
-      rx: jet.rotation.z,
-      ry: jet.rotation.x,
+      rx: jet.model.rotation.z,
+      ry: jet.model.rotation.x,
       model: sphere.clone(),
       hit: hitSphere.clone(),
     }
@@ -82,7 +77,7 @@ function shooting() {
     shot.model.material.emissive = new THREE.Color(0xffff00)
     shot.model.material.roughness = .5
     shot.model.material.metalness = 1
-    shot.model.position.set(...jet.position)
+    shot.model.position.set(...jet.model.position)
     shot.hit.center.copy(shot.model.position)
     GAME.scene.add(shot.model)
     jet.shots.push(shot)
@@ -189,37 +184,37 @@ function moveEnemy(enemy) {
 
 function updateJoystick(event) {
   if (!event.buttons) {
-    jetJoystick.x = event.clientX
-    jetJoystick.y = event.clientY
+    jet.joystick.x = event.clientX
+    jet.joystick.y = event.clientY
   } else {
-    jetJoystick.x = null
-    jetJoystick.y = null
+    jet.joystick.x = null
+    jet.joystick.y = null
   }
 }
 
 function moveJet() {
   if (jet
-    && jetJoystick.x
-    && jetJoystick.y) {
+    && jet.joystick.x
+    && jet.joystick.y) {
 
     let wh = window.innerHeight
     let ww = window.innerWidth
 
-    jet.rotation.x += (jetJoystick.y - wh / 2) / wh / 100
+    jet.model.rotation.x += (jet.joystick.y - wh / 2) / wh / 100
 
-    if (Math.abs(jet.position.x) > 1) {
-      jet.position.x = jet.position.x / Math.abs(jet.position.x)
+    if (Math.abs(jet.model.position.x) > 1) {
+      jet.model.position.x = jet.model.position.x / Math.abs(jet.model.position.x)
     } else {
-      jet.rotation.z -= (jetJoystick.x - ww / 2) / ww / 10
+      jet.model.rotation.z -= (jet.joystick.x - ww / 2) / ww / 10
     }
 
-    if (Math.abs(jet.rotation.z) != 0) {
-      jet.position.x += (jetJoystick.x - ww / 2) / ww / 10
-      jet.rotation.y = jet.rotation.z / 2.5
+    if (Math.abs(jet.model.rotation.z) != 0) {
+      jet.model.position.x += (jet.joystick.x - ww / 2) / ww / 10
+      jet.model.rotation.y = jet.model.rotation.z / 2.5
     }
 
-    if (Math.abs(jet.rotation.y) > .5)
-      jet.rotation.y = .5 * (jet.rotation.y / Math.abs(jet.rotation.y))
+    if (Math.abs(jet.model.rotation.y) > .5)
+      jet.model.rotation.y = .5 * (jet.model.rotation.y / Math.abs(jet.model.rotation.y))
   }
 }
 
