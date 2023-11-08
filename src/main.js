@@ -50,41 +50,12 @@ enemy.rotateY(3.14)
 // enemy.position.z = -1
 // scene.add(enemy)
 
-const sphere_geometry = new THREE.SphereGeometry(GAME.HIT_RADIUS / 2, 64, 32);
-const sphereColor = new THREE.MeshStandardMaterial({ color: 0xffff00 });
-const sphere = new THREE.Mesh(sphere_geometry, sphereColor);
 const hitSphere = new THREE.Sphere(new THREE.Vector3(0, 0, 0), GAME.HIT_RADIUS)
 
 const explosionTexture = new THREE.TextureLoader().load('img/textures/explosion.png');
 const explosionlight = new THREE.PointLight(0xff3300, 1, 5);
 
 const enemies = createEnemies()
-
-function shooting() {
-  if (GAME.TOTAL_SHOTS > 0) {
-    if (jet.shots.length > 50)
-      return 0
-      GAME.TOTAL_SHOTS--
-    const shot = {
-      rx: jet.model.rotation.z,
-      ry: jet.model.rotation.x,
-      model: sphere.clone(),
-      hit: hitSphere.clone(),
-    }
-    shot.hit.radius = GAME.HIT_RADIUS / 2
-    shot.model.material.transparent = true
-    shot.model.material.opacity = .5
-    shot.model.material.emissive = new THREE.Color(0xffff00)
-    shot.model.material.roughness = .5
-    shot.model.material.metalness = 1
-    shot.model.position.set(...jet.model.position)
-    shot.hit.center.copy(shot.model.position)
-    GAME.scene.add(shot.model)
-    jet.shots.push(shot)
-  } else {
-    console.warn("ACABOU A MUNIÇÃO!!!")
-  }
-}
 
 function shootDown(enemy) {
   if (jet.shots.length == 0) return false;
@@ -222,7 +193,7 @@ const gameLoop = () => {
 }
 
 window.addEventListener('mousemove',e=>jet.updateJoystick(e))
-window.addEventListener('click', shooting);
+window.addEventListener('click', e=>jet.shooting());
 window.addEventListener('keydown', event =>{
   GAME.GAME_OVER && showModal()
   GAME.KEY = event.key
@@ -230,7 +201,7 @@ window.addEventListener('keydown', event =>{
       (  GAME.KEY == ' ' 
       || GAME.KEY == 'Enter')
       && !GAME.GAME_OVER
-      && shooting()
+      && jet.shooting()
     )
 });
 
