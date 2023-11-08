@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import SkyBox from './classes/SkyBox'
-import TextureAnimator from './textureAnimator'
+import TextureAnimator from './classes/TextureAnimator'
 import Model3D from './classes/Model3D';
 
 const QTD_ENEMIES = 5
@@ -264,7 +264,7 @@ window.addEventListener('mousemove', updateJoystick)
 window.addEventListener('click', shooting);
 window.addEventListener('keydown', e =>{
   GAME_OVER && showModal()
-  return ((e.key == ' ' || e.key == 'Enter') && shooting())
+  return ((e.key == ' ' || e.key == 'Enter') && !GAME_OVER && shooting())
 });
 
 gameLoop()
