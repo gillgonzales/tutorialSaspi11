@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { createSkyBox } from './skybox'
+import SkyBox from './classes/SkyBox'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import TextureAnimator from './textureAnimator'
@@ -26,9 +26,8 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(0, .25, 2)
 
-const skyBox = await createSkyBox('bluesky', 500)
-skyBox.position.y = .25
-scene.add(skyBox)
+const skyBox = new SkyBox('bluesky', 200)
+await skyBox.create(scene);
 
 const jetPath = 'models/f15c/'
 const mtlFile = 'f15c.mtl'
@@ -262,8 +261,8 @@ function showModal(){
 }
 
 const gameLoop = () => {
-  skyBox.rotation.y += .0001
-  skyBox.position.z += .0001
+  skyBox.model.rotation.y += .0001
+  skyBox.model.position.z += .0001
   moveJet()
   updateShots()
   enemies.forEach((e) =>{ 
