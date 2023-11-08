@@ -83,4 +83,22 @@ export default class Airplane extends Model3D {
 		  console.warn("ACABOU A MUNIÇÃO!!!")
 		}
 	  }
+
+	  updateShots() {
+		if (this.shots.length == 0) return 0
+		this.shots.forEach((shot) => {
+		  shot.model.position.z -= 1
+		  shot.model.position.x += -shot.rx / 2
+		  shot.model.position.y += shot.ry / 5
+		  shot.hit.center.copy(shot.model.position)
+		})
+	  
+		this.shots = this.shots.filter((shot) => {
+		  if (shot.model.position.z < -150) {
+			this.GAME.scene.remove(shot.model)
+			return false
+		  }
+		  return true
+		})
+	  }
 }
