@@ -1,7 +1,5 @@
 import * as THREE from 'three'
 import SkyBox from './classes/SkyBox'
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
-import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import TextureAnimator from './textureAnimator'
 import Model3D from './classes/Model3D';
 
