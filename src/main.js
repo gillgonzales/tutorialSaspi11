@@ -3,6 +3,7 @@ import SkyBox from './classes/SkyBox'
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import { MTLLoader } from 'three/examples/jsm/loaders/MTLLoader.js';
 import TextureAnimator from './textureAnimator'
+import Model3D from './classes/Model3D';
 
 const QTD_ENEMIES = 5
 const HIT_RADIUS = .125
@@ -29,25 +30,15 @@ camera.position.set(0, .25, 2)
 const skyBox = new SkyBox('bluesky', 200)
 await skyBox.create(scene);
 
-const jetPath = 'models/f15c/'
-const mtlFile = 'f15c.mtl'
-const objFile = 'f15c.obj'
+const modelsPath = 'models/f15c/'
 
-const manager = new THREE.LoadingManager();
-const mtlLoader = new MTLLoader(manager);
-const objLoader = new OBJLoader();
-
-mtlLoader.setPath(jetPath)
-objLoader.setPath(jetPath)
-
-objLoader.setMaterials(await mtlLoader.loadAsync(mtlFile))
-const jet = await objLoader.loadAsync(objFile)
+const jetModel = new Model3D(modelsPath,'f15c.mtl','f15c.obj')
+const jet = await jetModel.create(scene)
 const jetJoystick = { x: null, y: null }
 
 jet.scale.setScalar(.5)
 jet.position.y = -.2
 jet.shots = new Array()
-scene.add(jet)
 
 const light = new THREE.AmbientLight(0xffffff, 10);
 scene.add(light);
@@ -56,15 +47,8 @@ const plight = new THREE.PointLight(0xffffff, 500, 50,.5);
 plight.position.set(0, 25, 10);
 scene.add(plight);
 
-const enemyMtlFile = 'f15c_e.mtl'
-const enemyMtlLoader = new MTLLoader(manager);
-const enemyObjLoader = new OBJLoader();
-
-enemyMtlLoader.setPath(jetPath)
-enemyObjLoader.setPath(jetPath)
-enemyObjLoader.setMaterials(await enemyMtlLoader.loadAsync(enemyMtlFile))
-
-const enemy = await enemyObjLoader.loadAsync(objFile)
+const enemyModel = new Model3D(modelsPath,'f15c_e.mtl','f15c.obj')
+const enemy = await enemyModel.create(scene)
 enemy.scale.setScalar(.5)
 enemy.position.y = .4
 enemy.rotateY(3.14)
